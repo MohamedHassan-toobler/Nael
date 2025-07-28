@@ -15,8 +15,10 @@ export default defineConfig({
     },
     reporter: 'html',
   use: {
-    browserName: 'chromium',
-    headless: false    
+    browserName : 'chromium',
+    headless : false,
+    trace : 'on',   
+    screenshot : 'on'
   },
 });
 module.exports = config;
