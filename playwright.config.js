@@ -1,9 +1,5 @@
 // @ts-check
 import { chromium, defineConfig, devices } from '@playwright/test';
-import { config } from 'process';
-
-
-
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
@@ -21,4 +17,3 @@ export default defineConfig({
     screenshot : 'on'
   },
 });
-module.exports = config;
