@@ -1,5 +1,6 @@
 const ExcelJs = require('exceljs');
-const newLocation = "New ResLocation";
+const randNum = Math.floor(Math.random()*20);
+const newLocation = "New ResLocation"+randNum;
 async function excelTest() {
     let output = { row: -1, column: -1 };
     const workbook = new ExcelJs.Workbook();
