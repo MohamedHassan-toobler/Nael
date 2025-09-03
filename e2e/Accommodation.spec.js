@@ -1,12 +1,15 @@
 const { test, expect } = require("@playwright/test");
-const { excelTest, newLocation } = require("./excelDemo");
+const { LoginPage } = require("../pageobjects/LoginPage");
+const { excelTest, newLocation } = require("../utils/excelDemo");
+const dataset = JSON.parse(
+  JSON.stringify(require("../utils/loginTestData.json"))
+);
 test('Verify that clicking the button labeled "Accommodation" triggers the expected action (e.g., navigating to an accommodation page).', async ({
   page,
 }) => {
-  await page.goto("https://cloud.apps.nael.thingspine.com/");
-  await page.locator("input[id=':Rclkn:']").fill("jeswin@example.com");
-  await page.locator("[name='password']").fill("Jesw#12627");
-  await page.locator("button[value='password']").click();
+  const loginPage = new LoginPage(page);
+  await loginPage.launchingPage(dataset.url);
+  await loginPage.login(dataset.username, dataset.password);
   await page.locator("a[href='#/accommodation-management']").click();
   //Verify that clicking the Create button triggers the expected action (e.g., form submission, navigation).(if the user chooses the accommodation type as 'Residential')
   const locationList = page.locator("table tr td:nth-child(2)");
