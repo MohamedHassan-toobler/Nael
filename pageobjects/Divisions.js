@@ -1,3 +1,5 @@
+const { leaveDate } = require("../utils/reusable-methods");
+
 class Divisions {
   constructor(page) {
     this.page = page;
@@ -47,7 +49,7 @@ class Divisions {
     await this.page.waitForSelector(".css-16snj3q", { state: "visible" });
     const randParentDiv = await this.parentDivisonList();
     await this.createDivisionButton.click();
-    this.divRandomnum = Math.floor(Math.random() * 100);
+    this.divRandomnum = leaveDate();
     await this.divisionInput.fill("Test Division " + this.divRandomnum);
     await this.divdisplayInput.fill(
       "Test display Division " + this.divRandomnum

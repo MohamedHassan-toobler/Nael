@@ -5,7 +5,7 @@ const { json } = require("stream/consumers");
 const dataset = JSON.parse(
   JSON.stringify(require("../utils/loginTestData.json"))
 );
-test.only('Verify that clicking the button labeled "Divisions" triggers the expected action (e.g., navigating to the division page).', async ({
+test('Verify that clicking the button labeled "Divisions" triggers the expected action (e.g., navigating to the division page).', async ({
   page,
 }) => {
   const loginPage = new LoginPage(page);
