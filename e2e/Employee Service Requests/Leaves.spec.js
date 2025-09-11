@@ -12,12 +12,15 @@ test("Extract and print id_token", async ({ page, request }) => {
   await page.waitForLoadState("networkidle", { timeout: 30000 });
   const api = new API(page, request);
   console.log(await api.getToken());
-  await api.createAnnualLeave();
+  const SRID = await api.createAnnualLeave();
 });
 test.only("Approve using LM", async ({ page }) => {
   const loginPage = new LoginPage(page);
   await loginPage.launchingPage(dataset.url);
   await loginPage.login(dataset.lmUsername, dataset.lmPassword);
   await page.getByText("Employee Service Request").click();
+  const leaveRows = page.locator(".css-1fxk2fq");
+  const leaveRowsText = leaveRows.allTextContents();
+  leaveRowsText.filter((leaveRow) => leaveRow === "#" + SRID);
   await page.pause();
 });
