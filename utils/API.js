@@ -50,7 +50,8 @@ class API {
         },
       }
     );
-    // return response;
+    const responseBody = await response.json(); // Parse JSON body
+    return responseBody.requestUniqueId;
   }
 }
 module.exports = { API };
