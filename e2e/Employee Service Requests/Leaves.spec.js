@@ -5,22 +5,61 @@ const dataset = JSON.parse(
   JSON.stringify(require("../../utils/loginTestData.json"))
 );
 const { API } = require("../../utils/API");
-test("Extract and print id_token", async ({ page, request }) => {
+let SRID;
+test("Create Annual Leave", async ({ page, request }) => {
   const loginPage = new LoginPage(page);
   await loginPage.launchingPage(dataset.url);
   await loginPage.login(dataset.username, dataset.password);
   await page.waitForLoadState("networkidle", { timeout: 30000 });
   const api = new API(page, request);
   console.log(await api.getToken());
-  const SRID = await api.createAnnualLeave();
+  SRID = await api.createAnnualLeave();
+  console.log(SRID);
 });
-test.only("Approve using LM", async ({ page }) => {
+test("Approve using LM", async ({ page }) => {
   const loginPage = new LoginPage(page);
   await loginPage.launchingPage(dataset.url);
   await loginPage.login(dataset.lmUsername, dataset.lmPassword);
   await page.getByText("Employee Service Request").click();
-  const leaveRows = page.locator(".css-1fxk2fq");
-  const leaveRowsText = leaveRows.allTextContents();
-  leaveRowsText.filter((leaveRow) => leaveRow === "#" + SRID);
+  await page.getByText("#" + SRID).click();
+  await page.getByRole("button", { name: "Approve" }).click();
+  await page.pause();
+});
+test.skip("Approve using HR", async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await loginPage.launchingPage(dataset.url);
+  await loginPage.login(dataset.hrUserName, dataset.hrPassword);
+  await page.getByText("Employee Service Request").click();
+  await page.getByText("#" + SRID).click();
+  await page.getByRole("button", { name: "Approve" }).click();
+  await page.pause();
+});
+test.skip("Reject using LM", async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await loginPage.launchingPage(dataset.url);
+  await loginPage.login(dataset.lmUsername, dataset.lmPassword);
+  await page.getByText("Employee Service Request").click();
+  await page.getByText("#" + SRID).click();
+  await page.getByPlaceholder("Enter comment").fill("Test Reject By LM");
+  await page.getByRole("button", { name: "Reject" }).click();
+  await page.getByRole("button", { name: "OK" }).click();
+  await page.pause();
+});
+test("Reject using HR", async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await loginPage.launchingPage(dataset.url);
+  await loginPage.login(dataset.hrUserName, dataset.hrPassword);
+  await page.getByText("Employee Service Request").click();
+  await page.getByText("#" + SRID).click();
+  await page.getByPlaceholder("Enter comment").fill("Test Reject By HR");
+  await page.getByRole("button", { name: "Reject" }).click();
+  await page.getByRole("button", { name: "OK" }).click();
+  await page.pause();
+});
+test.skip("Verify the filters are working fine", async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await loginPage.launchingPage(dataset.url);
+  await loginPage.login(dataset.userName, dataset.password);
+  await page.getByText("Employee Service Request").click();
   await page.pause();
 });
