@@ -12,6 +12,7 @@
     "@types/node": "^24.0.14"
   },
   "dependencies": {
-    "exceljs": "^4.4.0"
+    "exceljs": "^4.4.0",
+    "path": "^0.12.7"
   }
 }
