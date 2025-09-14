@@ -56,10 +56,17 @@ test("Reject using HR", async ({ page }) => {
   await page.getByRole("button", { name: "OK" }).click();
   await page.pause();
 });
-test.skip("Verify the filters are working fine", async ({ page }) => {
+test.only("Verify the filters are working fine", async ({ page }) => {
   const loginPage = new LoginPage(page);
   await loginPage.launchingPage(dataset.url);
-  await loginPage.login(dataset.userName, dataset.password);
+  await loginPage.login(dataset.username, dataset.password);
   await page.getByText("Employee Service Request").click();
+  //Verify the Search is working fine or not\
+  await page.waitForSelector(".css-pd9d3b", {
+    state: "visible",
+    timeout: 50000,
+  });
+  await page.getByRole("combobox", { name: "Search" }).fill("jesw");
+  await page.getByRole("option", { name: "Jeswin Johnson -" }).click();
   await page.pause();
 });
