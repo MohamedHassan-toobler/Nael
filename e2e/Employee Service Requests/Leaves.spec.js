@@ -131,6 +131,23 @@ test.only("Verify the filters are working fine", async ({ page }) => {
   const appliedOnText = await appliedOnList.first().textContent();
   const [day, monthText, year] = appliedOnText.trim().split(" ");
   await page.getByPlaceholder("Applied On").click();
-  await page.getByRole("button", { name: "Aug" + " " + year });
+  await page
+    .locator(
+      "button[class='rs-calendar-header-title rs-calendar-header-title-date rs-btn rs-btn-subtle rs-btn-xs']"
+    )
+    .click();
+  const pickedMonthYear = page.locator(
+    `div[aria-label='${monthText + " " + year}']`
+  );
+  await pickedMonthYear.getByText(monthText).click();
+  await page.getByTitle("01" + " " + monthText + " " + year).click();
+  await page.getByTitle(appliedOnText).click();
+  await page.getByRole("button", { name: "OK" }).click();
+  await page.waitForSelector("td:nth-child(5)", {
+    state: "visible",
+    timeout: 5000,
+  });
+
   await page.pause();
+  //
 });
