@@ -80,75 +80,39 @@ test.only("Verify the filters are working fine", async ({ page }) => {
   expect(values.every((val) => val.includes("Jeswin Johnson"))).toBe(true);
   await page.getByRole("button", { name: "Clear Filter" }).click();
   // Verify the leave filter
-  // await page.getByRole("combobox", { name: "Leave Type" }).fill("Ann");
-  // await page.getByRole("option", { name: "Annual Leave" }).click();
-  // await page.waitForSelector("td:nth-child(4)", {
-  //   state: "visible",
-  //   timeout: 5000,
-  // });
-  // const leaveTypeRows = page.locator("td:nth-child(4)");
-  // const leaveTypeValues = await leaveTypeRows.allTextContents();
-  // expect(
-  //   leaveTypeValues.every((val) => val.trim().includes("Annual Leave"))
-  // ).toBe(true);
-  // await page.getByRole("button", { name: "Clear Filter" }).click();
-  // // Verify LM Status filter
-  // await page.getByRole("combobox", { name: "LM Status" }).click();
-  // await page.getByText("Approved / Skip LM").click();
-  // await page.waitForSelector("td:nth-child(9)", {
-  //   state: "visible",
-  //   timeout: 10000,
-  // });
-  // const lmStatus = await page.locator("td:nth-child(9)").allTextContents();
-  // expect(
-  //   lmStatus.every(
-  //     (val) => val.trim().includes("Approved") || val.trim().includes("NA")
-  //   )
-  // ).toBe(true);
-  // // Verify HR Status Filter
-  // await page.getByRole("combobox", { name: "HR Status" }).click();
-  // await page.getByRole("option", { name: "Approved" }).locator("div").click();
-  // await page.waitForSelector("td:nth-child(10)", {
-  //   state: "visible",
-  //   timeout: 10000,
-  // });
-  // const hrStatus = await page.locator("td:nth-child(10)").allTextContents();
-  // expect(hrStatus.every((val) => val === "Approved")).toBe(true);
-  // await page.getByRole("button", { name: "Clear Filter" }).click();
-  // //Verify the Sort By filter
-  // await page
-  //   .locator("div")
-  //   .filter({ hasText: /^Sort By$/ })
-  //   .click();
-  // await page.getByText("NCID").click();
-  // const idTexts = await page.locator("td:nth-child(3)").allTextContents();
-  // const ids = idTexts.map((val) => parseInt(val.trim(), 10));
-  // const sortedIDs = [...ids].sort((a, b) => a - b);
-  // expect(ids).toEqual(sortedIDs);
-  // await page.getByRole("button", { name: "Clear Filter" }).click();
-  //Verify the Applied On Filter
-  const appliedOnList = page.locator("td:nth-child(5)");
-  const appliedOnText = await appliedOnList.first().textContent();
-  const [day, monthText, year] = appliedOnText.trim().split(" ");
-  await page.getByPlaceholder("Applied On").click();
-  await page
-    .locator(
-      "button[class='rs-calendar-header-title rs-calendar-header-title-date rs-btn rs-btn-subtle rs-btn-xs']"
-    )
-    .click();
-  const pickedMonthYear = page.locator(
-    `div[aria-label='${monthText + " " + year}']`
-  );
-  await pickedMonthYear.getByText(monthText).click();
-  await page.getByTitle("01" + " " + monthText + " " + year).click();
-  await page.getByTitle(appliedOnText).click();
-  await page.getByRole("button", { name: "OK" }).click();
-  await page.waitForSelector("td:nth-child(5)", {
+  await page.getByRole("combobox", { name: "Leave Type" }).fill("Ann");
+  await page.getByRole("option", { name: "Annual Leave" }).click();
+  await page.waitForSelector(".css-149vd0d", {
     state: "visible",
     timeout: 5000,
   });
-
+  const leaveTypeRows = page.locator("#trtype-3");
+  const leaveTypeValues = await leaveTypeRows.allTextContents();
+  const valuesToCheck = leaveTypeValues.slice(1);
+  expect(valuesToCheck.every((val) => val.includes("Annual Leave"))).toBe(true);
+  await page.getByRole("button", { name: "Clear Filter" }).click();
+  // Verify LM Status filter
+  await page.getByRole("combobox", { name: "LM Status" }).click();
+  await page.getByText("Approved / Skip LM").click();
+  await page.waitForSelector(".css-19imqg1", {
+    state: "visible",
+    timeout: 10000,
+  });
+  const lmStatus = await page.locator("td:nth-child(9)").allTextContents();
+  expect(lmStatus.every((val) => val === "Approved" || val === "NA")).toBe(
+    true
+  );
+  // Verify HR Status Filter
+  await page.getByRole("combobox", { name: "HR Status" }).click();
+  await page.getByRole("option", { name: "Approved" }).locator("div").click();
+  await page.waitForSelector(".css-19imqg1", {
+    state: "visible",
+    timeout: 10000,
+  });
+  const hrStatus = await page.locator("td:nth-child(10)").allTextContents();
+  expect(hrStatus.every((val) => val === "Approved")).toBe(true);
+  await page.getByRole("button", { name: "Clear Filter" }).click();
+  const idTexts = await page.locator("td:nth-child(3)").allTextContents();
+  const soretdID = idTexts.sort((a, b) => a - b);
   await page.pause();
-  // 
-  //
 });
