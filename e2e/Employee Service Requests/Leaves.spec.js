@@ -1,4 +1,3 @@
-//
 const { test, expect } = require("@playwright/test");
 const { LoginPage } = require("../../pageobjects/LoginPage");
 const { json } = require("stream/consumers");
@@ -148,7 +147,14 @@ test.only("Verify the filters are working fine", async ({ page }) => {
     state: "visible",
     timeout: 5000,
   });
-
+  const appliedOnFilteredText = await appliedOnList.allInnerTexts();
+  const appliedOnInputValues = await page
+    .getByPlaceholder("Applied On")
+    .inputValue();
+  const [trimmedStartDate, trimmedEndDate] = appliedOnInputValues.split(
+    /-(?=\d{2}-[A-Za-z]{3}-\d{4}$)/
+  );
+  console.log(trimmedStartDate);
+  console.log(trimmedEndDate);
   await page.pause();
-  //
 });
