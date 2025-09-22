@@ -127,34 +127,44 @@ test.only("Verify the filters are working fine", async ({ page }) => {
   // expect(ids).toEqual(sortedIDs);
   // await page.getByRole("button", { name: "Clear Filter" }).click();
   //Verify the Applied On Filter
-  const appliedOnList = page.locator("td:nth-child(5)");
-  const appliedOnText = await appliedOnList.first().textContent();
-  const [day, monthText, year] = appliedOnText.trim().split(" ");
-  await page.getByPlaceholder("Applied On").click();
-  await page
-    .locator(
-      "button[class='rs-calendar-header-title rs-calendar-header-title-date rs-btn rs-btn-subtle rs-btn-xs']"
-    )
-    .click();
-  const pickedMonthYear = page.locator(
-    `div[aria-label='${monthText + " " + year}']`
-  );
-  await pickedMonthYear.getByText(monthText).click();
-  await page.getByTitle("01" + " " + monthText + " " + year).click();
-  await page.getByTitle(appliedOnText).click();
-  await page.getByRole("button", { name: "OK" }).click();
-  await page.waitForSelector("td:nth-child(5)", {
-    state: "visible",
-    timeout: 5000,
-  });
-  const appliedOnFilteredText = await appliedOnList.allInnerTexts();
-  const appliedOnInputValues = await page
-    .getByPlaceholder("Applied On")
-    .inputValue();
-  const [trimmedStartDate, trimmedEndDate] = appliedOnInputValues.split(
-    /-(?=\d{2}-[A-Za-z]{3}-\d{4}$)/
-  );
-  console.log(trimmedStartDate);
-  console.log(trimmedEndDate);
+  // const appliedOnList = page.locator("td:nth-child(5)");
+  // const appliedOnText = await appliedOnList.first().textContent();
+  // const [day, monthText, year] = appliedOnText.trim().split(" ");
+  // await page.getByPlaceholder("Applied On").click();
+  // await page
+  //   .locator(
+  //     "button[class='rs-calendar-header-title rs-calendar-header-title-date rs-btn rs-btn-subtle rs-btn-xs']"
+  //   )
+  //   .click();
+  // const pickedMonthYear = page.locator(
+  //   `div[aria-label='${monthText + " " + year}']`
+  // );
+  // await pickedMonthYear.getByText(monthText).click();
+  // await page.getByTitle("01" + " " + monthText + " " + year).click();
+  // await page.getByTitle(appliedOnText).click();
+  // await page.getByRole("button", { name: "OK" }).click();
+  // await page.waitForSelector("td:nth-child(5)", {
+  //   state: "visible",
+  //   timeout: 10000,
+  // });
+  // const appliedOnInputValues = await page
+  //   .getByPlaceholder("Applied On")
+  //   .inputValue();
+  // const [trimmedStartDate, trimmedEndDate] = appliedOnInputValues.split(
+  //   /-(?=\d{2}-[A-Za-z]{3}-\d{4}$)/
+  // );
+  // const startDate = new Date(trimmedStartDate.trim());
+  // const endDate = new Date(trimmedEndDate.trim());
+  // const appliedOnFilteredText = await appliedOnList.allInnerTexts();
+  // const allInRange = appliedOnFilteredText.every((dateStr) => {
+  //   const date = new Date(dateStr.trim()); // Convert string from table to Date
+  //   return date >= startDate && date <= endDate; // Check if it's within your filter range
+  // });
+  // expect(allInRange).toBe(true);
+  // await page.getByRole("button", { name: "Clear Filter" }).click();
+  //Verify Date range filter
+  const dateRangeList = page.locator("td:nth-child(6)");
+  const firstdateRangeText = await dateRangeList.first().textContent();
+  console.log(firstdateRangeText);
   await page.pause();
 });
