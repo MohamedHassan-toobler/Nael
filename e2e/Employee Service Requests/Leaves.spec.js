@@ -62,7 +62,7 @@ test.only("Verify the filters are working fine", async ({ page }) => {
   await loginPage.launchingPage(dataset.url);
   await loginPage.login(dataset.username, dataset.password);
   await page.getByText("Employee Service Request").click();
-  //Verify the Search is working fine or not\
+  //Verify the Search is working fine or not
   await page.waitForSelector(".css-pd9d3b", {
     state: "visible",
     timeout: 50000,
