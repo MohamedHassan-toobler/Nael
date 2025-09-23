@@ -165,6 +165,35 @@ test.only("Verify the filters are working fine", async ({ page }) => {
   //Verify Date range filter
   const dateRangeList = page.locator("td:nth-child(6)");
   const firstdateRangeText = await dateRangeList.first().textContent();
-  console.log(firstdateRangeText);
+  const [start, end] = firstdateRangeText.split("-");
+  const requiredStart = start.replace(/\s*\(.*?\)/, "").trim();
+  const requiredEnd = end.replace(/\s*\(.*?\)/, "").trim();
+  const [dateRangeDay, dateRangeMonth, dateRangeYear] = requiredEnd
+    .trim()
+    .split(" ");
+  await page.getByPlaceholder("Select date Range").click();
+  await page
+    .locator(
+      "div[data-testid='calendar-start'] button[aria-label='Select month']"
+    )
+    .click();
+  const pickedMonthYear1 = page.locator(
+    `div[aria-label='${dateRangeMonth.replace(",", "") + " " + dateRangeYear}']`
+  );
+  await pickedMonthYear1.getByText(dateRangeMonth.replace(",", "")).click();
+  console.log(
+    "01" + " " + dateRangeMonth.replace(",", "") + " " + dateRangeYear
+  );
+  await page
+    .getByTitle(
+      "01" + " " + dateRangeMonth.replace(",", "") + " " + dateRangeYear
+    )
+    .click();
+  await page.getByTitle(requiredEnd.replace(",", "")).click();
+  await page.getByRole("button", { name: "OK" }).click();
+  await page.waitForSelector("td:nth-child(6)", {
+    state: "visible",
+    timeout: 10000,
+  });
   await page.pause();
 });
