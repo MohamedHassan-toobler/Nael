@@ -5,6 +5,7 @@ const dataset = JSON.parse(
   JSON.stringify(require("../../utils/loginTestData.json"))
 );
 const { API } = require("../../utils/API");
+const { leaveDate } = require("../../utils/reusable-methods");
 let SRID;
 test("Create Annual Leave", async ({ page, request }) => {
   const loginPage = new LoginPage(page);
@@ -56,10 +57,10 @@ test("Reject using HR", async ({ page }) => {
   await page.getByRole("button", { name: "OK" }).click();
   await page.pause();
 });
-test.skip("Verify the filters are working fine", async ({ page }) => {
+test.only("Verify the filters are working fine", async ({ page }) => {
   const loginPage = new LoginPage(page);
   await loginPage.launchingPage(dataset.url);
-  await loginPage.login(dataset.userName, dataset.password);
+  await loginPage.login(dataset.username, dataset.password);
   await page.getByText("Employee Service Request").click();
   //Verify the Search is working fine or not
   await page.waitForSelector(".css-pd9d3b", {
