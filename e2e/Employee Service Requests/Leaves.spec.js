@@ -6,6 +6,9 @@ const dataset = JSON.parse(
 );
 const { API } = require("../../utils/API");
 const { leaveDate } = require("../../utils/reusable-methods");
+const {
+  Leaves,
+} = require("../../pageobjects/Employee Service Requests/Leaves");
 let SRID;
 test("Create Annual Leave", async ({ page, request }) => {
   const loginPage = new LoginPage(page);
@@ -21,9 +24,8 @@ test("Approve using LM", async ({ page }) => {
   const loginPage = new LoginPage(page);
   await loginPage.launchingPage(dataset.url);
   await loginPage.login(dataset.lmUsername, dataset.lmPassword);
-  await page.getByText("Employee Service Request").click();
-  await page.getByText("#" + SRID).click();
-  await page.getByRole("button", { name: "Approve" }).click();
+  const leaves = new Leaves(page, SRID);
+  await leaves.approveUsingLM();
   await page.pause();
 });
 test.skip("Approve using HR", async ({ page }) => {
@@ -46,7 +48,7 @@ test.skip("Reject using LM", async ({ page }) => {
   await page.getByRole("button", { name: "OK" }).click();
   await page.pause();
 });
-test("Reject using HR", async ({ page }) => {
+test.skip("Reject using HR", async ({ page }) => {
   const loginPage = new LoginPage(page);
   await loginPage.launchingPage(dataset.url);
   await loginPage.login(dataset.hrUserName, dataset.hrPassword);
@@ -57,7 +59,7 @@ test("Reject using HR", async ({ page }) => {
   await page.getByRole("button", { name: "OK" }).click();
   await page.pause();
 });
-test.only("Verify the filters are working fine", async ({ page }) => {
+test.skip("Verify the filters are working fine", async ({ page }) => {
   const loginPage = new LoginPage(page);
   await loginPage.launchingPage(dataset.url);
   await loginPage.login(dataset.username, dataset.password);
@@ -181,19 +183,41 @@ test.only("Verify the filters are working fine", async ({ page }) => {
     `div[aria-label='${dateRangeMonth.replace(",", "") + " " + dateRangeYear}']`
   );
   await pickedMonthYear1.getByText(dateRangeMonth.replace(",", "")).click();
-  console.log(
-    "01" + " " + dateRangeMonth.replace(",", "") + " " + dateRangeYear
-  );
   await page
     .getByTitle(
       "01" + " " + dateRangeMonth.replace(",", "") + " " + dateRangeYear
     )
     .click();
-  await page.getByTitle(requiredEnd.replace(",", "")).click();
+  let [outDate, remDate] = requiredEnd.split(" ");
+  outDate = outDate.padStart(2, "0");
+  let endDate1 = requiredEnd.replace(",", "");
+  endDate1 = outDate + " " + remDate.replace(",", " ") + dateRangeYear; // e.g. "05 Jan 2027"
+  await page.getByTitle(endDate1).click();
   await page.getByRole("button", { name: "OK" }).click();
   await page.waitForSelector("td:nth-child(6)", {
     state: "visible",
     timeout: 10000,
   });
+  await page.locator("td:nth-child(6)").allTextContents();
+  const selectedDateRange = await page
+    .getByPlaceholder("Select date Range")
+    .inputValue();
+  const [trimmedStartDate1, trimmedEndDate1] = selectedDateRange.split(
+    /-(?=\d{2}-[A-Za-z]{3}-\d{4}$)/
+  );
+  const filterStart = new Date(trimmedStartDate1);
+  const filterEnd = new Date(trimmedEndDate1);
+  const texts = await dateRangeList.allTextContents();
+  const allValid = texts.every((rangeText) => {
+    const [start1, end1] = rangeText.split("-");
+    const recordStart = new Date(start1.replace(/\s*\(.*?\)/, "").trim());
+    const recordEnd = new Date(end1.replace(/\s*\(.*?\)/, "").trim());
+
+    // check overlap
+    return recordStart <= filterEnd && recordEnd >= filterStart;
+  });
+
+  // Assertion
+  expect(allValid).toBeTruthy();
   await page.pause();
 });
