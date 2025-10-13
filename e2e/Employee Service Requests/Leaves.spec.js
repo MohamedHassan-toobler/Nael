@@ -118,6 +118,6 @@ test("Verify the filters are working fine", async ({ page }) => {
   //Verify the Applied On Filter
   expect(allInRange).toBe(true);
   //Verify Date range filter
-  expect(allValid).toBeTruthy();
+  expect(allValid).toBe(true);
   await page.pause();
 });

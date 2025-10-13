@@ -41,7 +41,9 @@ class Leaves {
       "div[data-testid='calendar-start'] button[aria-label='Select month']"
     );
   }
-  async launchEmployeeServiceRequestPage() {}
+  async launchEmployeeServiceRequestPage() {
+    await this.employeeServicePage.click();
+  }
   async approveUsingLM() {
     await this.employeeServicePage.click();
     await this.page.getByText("#" + this.SRID).click();
