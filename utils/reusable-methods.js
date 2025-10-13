@@ -15,5 +15,8 @@ const generateDates = () => {
     noOfDays: 4,
   };
 };
-async function waitForVisible() {}
-module.exports = { generateDates, leaveDate };
+const randNumb = (reqNum) => {
+  const randomNu = Math.floor(Math.random() * reqNum);
+  return randomNu;
+};
+module.exports = { generateDates, leaveDate, randNumb };
